@@ -42,37 +42,43 @@
     </div>
 
     <script type="module">
-      // ✅ CDN compatível com ES Modules
-      import * as OBC from "https://cdn.skypack.dev/@thatopen/components";
+  import * as OBC from "https://cdn.skypack.dev/@thatopen/components";
 
-      // ⛔ Impede o navegador de abrir o ficheiro numa nova aba
-      document.addEventListener("dragover", (event) => event.preventDefault());
-      document.addEventListener("drop", (event) => event.preventDefault());
+  // ✅ Prevenir comportamento em toda a janela
+  window.addEventListener("dragover", (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+  });
 
-      const container = document.getElementById("viewer-container");
-      const dropHint = document.getElementById("drop-hint");
+  window.addEventListener("drop", (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+  });
 
-      const components = new OBC.Components();
-      components.add(OBC.Camera);
-      components.add(OBC.Scene);
-      components.add(OBC.Renderer);
-      components.add(OBC.SimpleGrid);
-      components.add(OBC.AxesHelper);
-      components.add(OBC.Postproduction);
+  const container = document.getElementById("viewer-container");
+  const dropHint = document.getElementById("drop-hint");
 
-      const viewer = new OBC.Viewer(container);
-      viewer.setComponents(components);
+  const components = new OBC.Components();
+  components.add(OBC.Camera);
+  components.add(OBC.Scene);
+  components.add(OBC.Renderer);
+  components.add(OBC.SimpleGrid);
+  components.add(OBC.AxesHelper);
+  components.add(OBC.Postproduction);
 
-      components.add(OBC.IfcLoader);
-      const ifcLoader = components.get(OBC.IfcLoader);
+  const viewer = new OBC.Viewer(container);
+  viewer.setComponents(components);
 
-      container.addEventListener("drop", async (event) => {
-        dropHint.style.display = "none";
-        const file = event.dataTransfer.files[0];
-        if (file && file.name.endsWith(".ifc")) {
-          const url = URL.createObjectURL(file);
-          await ifcLoader.load(url);
-        }
-      });
-    </script>
+  components.add(OBC.IfcLoader);
+  const ifcLoader = components.get(OBC.IfcLoader);
+
+  container.addEventListener("drop", async (event) => {
+    dropHint.style.display = "none";
+    const file = event.dataTransfer.files[0];
+    if (file && file.name.endsWith(".ifc")) {
+      const url = URL.createObjectURL(file);
+      await ifcLoader.load(url);
+    }
+  });
+</script>
 
