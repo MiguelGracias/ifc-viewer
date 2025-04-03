@@ -11,6 +11,7 @@
         overflow: hidden;
         font-family: sans-serif;
       }
+
       #viewer-container {
         width: 100%;
         height: 100vh;
@@ -21,6 +22,7 @@
         justify-content: center;
         position: relative;
       }
+
       #drop-hint {
         position: absolute;
         z-index: 10;
@@ -40,38 +42,37 @@
     </div>
 
     <script type="module">
-import * as OBC from "https://cdn.jsdelivr.net/npm/@thatopen/components@latest/dist/index.js?module";
-    document.addEventListener("dragover", (event) => event.preventDefault());
-  document.addEventListener("drop", (event) => event.preventDefault());
+      // ✅ CDN compatível com ES Modules
+      import * as OBC from "https://cdn.skypack.dev/@thatopen/components";
 
-  
+      // ⛔ Impede o navegador de abrir o ficheiro numa nova aba
+      document.addEventListener("dragover", (event) => event.preventDefault());
+      document.addEventListener("drop", (event) => event.preventDefault());
 
-  const container = document.getElementById("viewer-container");
-  const dropHint = document.getElementById("drop-hint");
+      const container = document.getElementById("viewer-container");
+      const dropHint = document.getElementById("drop-hint");
 
-  const components = new OBC.Components();
-  components.add(OBC.Camera);
-  components.add(OBC.Scene);
-  components.add(OBC.Renderer);
-  components.add(OBC.SimpleGrid);
-  components.add(OBC.AxesHelper);
-  components.add(OBC.Postproduction);
+      const components = new OBC.Components();
+      components.add(OBC.Camera);
+      components.add(OBC.Scene);
+      components.add(OBC.Renderer);
+      components.add(OBC.SimpleGrid);
+      components.add(OBC.AxesHelper);
+      components.add(OBC.Postproduction);
 
-  const viewer = new OBC.Viewer(container);
-  viewer.setComponents(components);
+      const viewer = new OBC.Viewer(container);
+      viewer.setComponents(components);
 
-  components.add(OBC.IfcLoader);
-  const ifcLoader = components.get(OBC.IfcLoader);
+      components.add(OBC.IfcLoader);
+      const ifcLoader = components.get(OBC.IfcLoader);
 
-  // Só o drop dentro da zona correta
-  container.addEventListener("drop", async (event) => {
-    dropHint.style.display = "none";
-    const file = event.dataTransfer.files[0];
-    if (file && file.name.endsWith(".ifc")) {
-      const url = URL.createObjectURL(file);
-      await ifcLoader.load(url);
-    }
-  });
+      container.addEventListener("drop", async (event) => {
+        dropHint.style.display = "none";
+        const file = event.dataTransfer.files[0];
+        if (file && file.name.endsWith(".ifc")) {
+          const url = URL.createObjectURL(file);
+          await ifcLoader.load(url);
+        }
+      });
     </script>
-  </body>
-</html>
+
