@@ -40,11 +40,11 @@
     </div>
 
     <script type="module">
-
+import * as OBC from "https://cdn.jsdelivr.net/npm/@thatopen/components@latest/dist/index.js?module";
     document.addEventListener("dragover", (event) => event.preventDefault());
   document.addEventListener("drop", (event) => event.preventDefault());
 
-  import * as OBC from "https://cdn.jsdelivr.net/npm/@thatopen/components@latest/dist/index.js?module";
+  
 
   const container = document.getElementById("viewer-container");
   const dropHint = document.getElementById("drop-hint");
