@@ -1,86 +1,41 @@
-<!DOCTYPE html>
-<html lang="pt">
-  <head>
-    <meta charset="UTF-8" />
-    <title>Visualizador IFC</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <style>
-      html, body {
-        margin: 0;
-        height: 100%;
-        overflow: hidden;
-        font-family: sans-serif;
-      }
-      #viewer-container {
-        width: 100%;
-        height: 100vh;
-        background: #222;
-        color: white;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        position: relative;
-      }
-      #drop-hint {
-        position: absolute;
-        z-index: 10;
-        color: white;
-        font-size: 1.2em;
-        background: rgba(0, 0, 0, 0.6);
-        padding: 1em;
-        border-radius: 10px;
-        pointer-events: none;
-        transition: opacity 0.3s ease;
-      }
-    </style>
-  </head>
-  <body>
-    <div id="viewer-container">
-      <div id="drop-hint">Arraste aqui um ficheiro IFC</div>
-    </div>
+<script type="module">
+  import * as OBC from "https://cdn.jsdelivr.net/npm/@thatopen/components@latest/dist/index.js";
 
-    <!-- That Open Engine -->
-    <script type="module">
-          import * as OBC from "https://cdn.jsdelivr.net/npm/@thatopen/components@latest";
-      
-      const container = document.getElementById("viewer-container");
-      const dropHint = document.getElementById("drop-hint");
+  const container = document.getElementById("viewer-container");
+  const dropHint = document.getElementById("drop-hint");
 
-      // Inicializar motor gráfico
-      const components = new OBC.Components();
-      components.add(OBC.Camera);
-      components.add(OBC.Scene);
-      components.add(OBC.Renderer);
-      components.add(OBC.SimpleGrid);
-      components.add(OBC.AxesHelper);
-      components.add(OBC.Postproduction);
+  const components = new OBC.Components();
+  components.add(OBC.Camera);
+  components.add(OBC.Scene);
+  components.add(OBC.Renderer);
+  components.add(OBC.SimpleGrid);
+  components.add(OBC.AxesHelper);
+  components.add(OBC.Postproduction);
 
-      const viewer = new OBC.Viewer(container);
-      viewer.setComponents(components);
+  const viewer = new OBC.Viewer(container);
+  viewer.setComponents(components);
 
-      components.add(OBC.IfcLoader);
-      const ifcLoader = components.get(OBC.IfcLoader);
+  components.add(OBC.IfcLoader);
+  const ifcLoader = components.get(OBC.IfcLoader);
 
-      // Drag & Drop
-      container.addEventListener("dragover", (event) => {
-        event.preventDefault();
-        dropHint.style.opacity = 1;
-        event.dataTransfer.dropEffect = "copy";
-      });
+  container.addEventListener("dragover", (event) => {
+    event.preventDefault();
+    dropHint.style.opacity = 1;
+    event.dataTransfer.dropEffect = "copy";
+  });
 
-      container.addEventListener("dragleave", () => {
-        dropHint.style.opacity = 0.6;
-      });
+  container.addEventListener("dragleave", () => {
+    dropHint.style.opacity = 0.6;
+  });
 
-      container.addEventListener("drop", async (event) => {
-        event.preventDefault();
-        dropHint.style.display = "none";
-        const file = event.dataTransfer.files[0];
-        if (file && file.name.endsWith(".ifc")) {
-          const url = URL.createObjectURL(file);
-          await ifcLoader.load(url);
-        }
-      });
-    </script>
-  </body>
-</html>
+  container.addEventListener("drop", async (event) => {
+    event.preventDefault();
+    dropHint.style.display = "none";
+    const file = event.dataTransfer.files[0];
+    if (file && file.name.endsWith(".ifc")) {
+      const url = URL.createObjectURL(file);
+      await ifcLoader.load(url);
+    }
+  });
+</script>
+
